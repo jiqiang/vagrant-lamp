@@ -95,6 +95,8 @@ Vagrant.configure(2) do |config|
     echo 'xdebug.remote_handler=dbgp' >> /etc/php5/apache2/php.ini
     echo 'xdebug.remote_log="/var/log/xdebug/xdebug.log"' >> /etc/php5/apache2/php.ini
     echo 'xdebug.remote_host="'$(route -n | grep 'UG' | grep -v 'UGH' | cut -f 10 -d ' ')'"' >> /etc/php5/apache2/php.ini
+    # Configuration timezone.
+    sudo sed -i 's#;date.timezone =#date.timezone = Australia/Melbourne#g' /etc/php5/apache2/php.ini
     sudo service apache2 restart
     # Add user vagrant to www-data group.
     sudo usermod -a -G www-data vagrant
