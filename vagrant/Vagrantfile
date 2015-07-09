@@ -84,5 +84,17 @@ Vagrant.configure(2) do |config|
     sudo apt-get -y install php5 libapache2-mod-php5
     # Install and configurate ther PHP related packages.
     sudo apt-get -y install curl php5-curl php5-gd php5-mcrypt php5-mysql php5-xmlrpc php5-common php5-dev php5-cli php5-fpm php5-xdebug
+    # Configurate xdebug.
+    echo '[xdebug]' >> /etc/php5/apache2/php.ini
+    echo 'zend_extension="'$(find / -name 'xdebug.so' 2> /dev/null)'"' >> /etc/php5/apache2/php.ini
+    echo 'xdebug.default_enable = 1' >> /etc/php5/apache2/php.ini
+    echo 'xdebug.idekey = "sublime.xdebug"' >> /etc/php5/apache2/php.ini
+    echo 'xdebug.remote_enable = 1' >> /etc/php5/apache2/php.ini
+    echo 'xdebug.remote_autostart = 0' >> /etc/php5/apache2/php.ini
+    echo 'xdebug.remote_port = 9000' >> /etc/php5/apache2/php.ini
+    echo 'xdebug.remote_handler=dbgp' >> /etc/php5/apache2/php.ini
+    echo 'xdebug.remote_log="/var/log/xdebug/xdebug.log"' >> /etc/php5/apache2/php.ini
+    echo 'xdebug.remote_host="'$(route -n | grep 'UG' | grep -v 'UGH' | cut -f 10 -d ' ')'"' >> /etc/php5/apache2/php.ini
+    sudo service apache2 restart
   SHELL
 end
