@@ -37,7 +37,10 @@ Vagrant.configure(2) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
+  config.vm.synced_folder "../project_docroot", "/var/www/html/project_docroot", type: "rsync",
+    rsync__exclude: ".git/",
+    group: "www-data",
+    owner: "www-data"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -104,5 +107,12 @@ Vagrant.configure(2) do |config|
     sudo cp /vagrant/fixperms.sh /usr/local/bin/fixperms
     sudo chown vagrant:vagrant /usr/local/bin/fixperms
     sudo chmod 744 /usr/local/bin/fixperms
+    # Setup virtual host.
+    sudo chown vagrant:vagrant /var/www/html/project_docroot
+    sudo cp /vagrant/vagrant-vhs.conf /etc/apache2/sites-available/vagrant-vhs.conf
+    sudo a2ensite vagrant-vhs.conf
+    sudo service apache2 restart
   SHELL
 end
+
+
