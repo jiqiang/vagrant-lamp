@@ -79,10 +79,10 @@ Vagrant.configure(2) do |config|
     sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password gleN1977'
     sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password gleN1977'
     sudo apt-get -y install mysql-server
-    mysql -u root -pgleN1977 -e "grant all privileges on *.* to 'root'@'%' identified by 'gleN1977' with grant option;flush privileges;"
-    sudo sed -i 's/bind-address/#bind-address/g' /etc/mysql/my.cnf
-    sudo sed -i 's/key_buffer/key_buffer_size/g' /etc/mysql/my.cnf
-    sudo service mysql restart
+    #mysql -u root -pgleN1977 -e "grant all privileges on *.* to 'root'@'%' identified by 'gleN1977' with grant option;flush privileges;"
+    #sudo sed -i 's/bind-address/#bind-address/g' /etc/mysql/my.cnf
+    #sudo sed -i 's/key_buffer/key_buffer_size/g' /etc/mysql/my.cnf
+    #sudo service mysql restart
     # Install and configurate PHP5.
     sudo apt-get -y install php5 libapache2-mod-php5
     # Install and configurate ther PHP related packages.
