@@ -37,7 +37,7 @@ Vagrant.configure(2) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder "../project_docroot", "/var/www/html/project_docroot", type: "rsync",
+  config.vm.synced_folder "../project_docroot", "/srv/project_docroot", type: "rsync",
     rsync__exclude: ".git/",
     group: "www-data",
     owner: "www-data"
@@ -121,7 +121,7 @@ Vagrant.configure(2) do |config|
     # Setup virtual host.
     if [ ! -f /etc/apache2/sites-available/vagrant-vhs.conf ]; then
       echo "Configure virtualhost"
-      sudo chown vagrant:vagrant /var/www/html/project_docroot
+      sudo chown vagrant:vagrant /srv/project_docroot
       sudo cp /vagrant/vagrant-vhs.conf /etc/apache2/sites-available/vagrant-vhs.conf
       sudo a2ensite vagrant-vhs.conf
     fi
