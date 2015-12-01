@@ -77,10 +77,10 @@ Vagrant.configure(2) do |config|
     fi
     sudo a2enmod rewrite ssl
     # Install and configurate mysql.
-    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password gleN1977'
-    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password gleN1977'
+    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password jiqiang'
+    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password jiqiang'
     sudo apt-get -y install mysql-server
-    #mysql -u root -pgleN1977 -e "grant all privileges on *.* to 'root'@'%' identified by 'gleN1977' with grant option;flush privileges;"
+    #mysql -u root -pgleN1977 -e "grant all privileges on *.* to 'root'@'%' identified by 'jqiiang' with grant option;flush privileges;"
     #sudo sed -i 's/bind-address/#bind-address/g' /etc/mysql/my.cnf
     #sudo sed -i 's/key_buffer/key_buffer_size/g' /etc/mysql/my.cnf
     #sudo service mysql restart
