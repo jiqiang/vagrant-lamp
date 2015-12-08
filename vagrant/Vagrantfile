@@ -37,7 +37,7 @@ Vagrant.configure(2) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder "../project_docroot", "/srv/project_docroot", type: "rsync",
+  config.vm.synced_folder "../site", "/srv/site", type: "rsync",
     rsync__exclude: ".git/",
     group: "www-data",
     owner: "www-data"
@@ -103,7 +103,7 @@ Vagrant.configure(2) do |config|
       sudo sed -i 's#;date.timezone =#date.timezone = Australia/Melbourne#g' /etc/php5/apache2/php.ini
       echo "ServerName vagrant-lamp" | sudo tee -a /etc/apache2/apache2.conf
       sudo a2enmod -q rewrite ssl
-      sudo chown vagrant:vagrant /srv/project_docroot
+      sudo chown vagrant:vagrant /srv/site
       sudo cp /vagrant/vagrant-vhs.conf /etc/apache2/sites-available/vagrant-vhs.conf
       sudo a2ensite vagrant-vhs.conf
       sudo service apache2 restart
