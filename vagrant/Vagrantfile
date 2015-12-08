@@ -75,16 +75,13 @@ Vagrant.configure(2) do |config|
       touch ~/vagrantlog
     fi
 
-    if ! grep -Fxq "php56" ~/vagrantlog ; then
-      echo "==========Add php 5.6 repository=========="
-      sudo add-apt-repository -y ppa:ondrej/php5-5.6
-      echo "php56" | tee -a ~/vagrantlog
-    fi
-
-    if ! grep -Fxq "update all repositories" ~/vagrantlog ; then
-      echo "==========Add php 5.6 repository=========="
+    if ! grep -Fxq "prepare" ~/vagrantlog ; then
+      echo "==========Prepare=========="
       sudo apt-get update
-      echo "update all repositories" | tee -a ~/vagrantlog
+      sudo apt-get install -y python-software-properties build-essential
+      sudo add-apt-repository -y ppa:ondrej/php5-5.6
+      sudo apt-get update
+      echo "prepare" | tee -a ~/vagrantlog
     fi
 
     if ! grep -Fxq "apache" ~/vagrantlog ; then
