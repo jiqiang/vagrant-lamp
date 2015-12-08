@@ -78,7 +78,7 @@ Vagrant.configure(2) do |config|
     echo "5. install packages"
     echo "6. install and configure xdebug"
     echo "7. configure user group"
-    echo "8. configure fixpers"
+    echo "8. configure fixperms"
     echo "================================"
     echo ""
     echo ""
