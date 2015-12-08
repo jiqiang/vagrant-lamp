@@ -88,7 +88,7 @@ Vagrant.configure(2) do |config|
     fi
 
     if ! grep -Fxq "apache" ~/vagrantlog ; then
-      echo "==========Install and configurate Apache"
+      echo "==========Install and Configure Apache"
       sudo apt-get install -y apache2
       sudo sed -i 's#;date.timezone =#date.timezone = Australia/Melbourne#g' /etc/php5/apache2/php.ini
       echo "ServerName vagrant-lamp" | sudo tee -a /etc/apache2/apache2.conf
@@ -98,7 +98,7 @@ Vagrant.configure(2) do |config|
     fi
 
     if ! grep -Fxq "mysql" ~/vagrantlog ; then
-      echo "==========Install and configurate mysql=========="
+      echo "==========Install and Configure mysql=========="
       sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password p@$$w03d'
       sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password p@$$w03d'
       sudo apt-get -y install mysql-server
@@ -117,7 +117,7 @@ Vagrant.configure(2) do |config|
 
     # Configurate xdebug.
     if ! grep -Fxq "xdebug" ~/vagrantlog ; then
-      echo "==========Install and configurate xdebug=========="
+      echo "==========Install and Configure xdebug=========="
       sudo apt-get install -y php5-xdebug
       echo '[xdebug]' >> /etc/php5/apache2/php.ini
       echo 'zend_extension="'$(find / -name 'xdebug.so' 2> /dev/null)'"' >> /etc/php5/apache2/php.ini
@@ -134,26 +134,26 @@ Vagrant.configure(2) do |config|
       echo "xdebug" | tee -a ~/vagrantlog
     fi
 
-    # Add user vagrant to www-data group.
     if ! id -nG "vagrant" | grep -qw "www-data"; then
-      echo "Configure user group"
+      echo "==========Configure user group=========="
       sudo usermod -a -G www-data vagrant
     fi
-    # Make fixperms.
+
     if [ ! -f /usr/local/bin/fixperms ]; then
-      echo "Configure fixperms"
+      echo "==========Configure fixperms=========="
       sudo cp /vagrant/fixperms.sh /usr/local/bin/fixperms
       sudo chown vagrant:vagrant /usr/local/bin/fixperms
       sudo chmod 744 /usr/local/bin/fixperms
     fi
-    # Setup virtual host.
+
     if [ ! -f /etc/apache2/sites-available/vagrant-vhs.conf ]; then
-      echo "Configure virtualhost"
+      echo "==========Configure virtualhost"
       sudo chown vagrant:vagrant /srv/project_docroot
       sudo cp /vagrant/vagrant-vhs.conf /etc/apache2/sites-available/vagrant-vhs.conf
       sudo a2ensite vagrant-vhs.conf
+      sudo service apache2 restart
     fi
-    sudo service apache2 restart
+
   SHELL
 end
 
