@@ -87,12 +87,15 @@ Vagrant.configure(2) do |config|
       echo "update all repositories" | tee -a ~/vagrantlog
     fi
 
-    # Install and configurate apache 2.4.
-    sudo apt-get install -y apache2
-    if ! grep -Fxq "ServerName vagrant-lamp" /etc/apache2/apache2.conf ; then
+    if ! grep -Fxq "apache" ~/vagrantlog ; then
+      echo "==========Install and configurate Apache"
+      sudo apt-get install -y apache2
+      sudo sed -i 's#;date.timezone =#date.timezone = Australia/Melbourne#g' /etc/php5/apache2/php.ini
       echo "ServerName vagrant-lamp" | sudo tee -a /etc/apache2/apache2.conf
+      sudo a2enmod rewrite ssl
+      sudo service apache2 restart
+      echo "apache" | tee -a ~/vagrantlog
     fi
-    sudo a2enmod rewrite ssl
 
     if ! grep -Fxq "mysql" ~/vagrantlog ; then
       echo "==========Install and configurate mysql=========="
@@ -103,20 +106,15 @@ Vagrant.configure(2) do |config|
       sudo sed -i 's/bind-address/#bind-address/g' /etc/mysql/my.cnf
       sudo sed -i 's/key_buffer/key_buffer_size/g' /etc/mysql/my.cnf
       sudo service mysql restart
+      echo "mysql" | tee -a ~/vagrantlog
     fi
 
-    # Install and configurate PHP5.
-    sudo apt-get -y install python-software-properties
+    if ! grep -Fxq "install packages" ~/vagrantlog ; then
+      echo "==========Install packages=========="
+      sudo apt-get install -y python-software-properties apache2 mysql-server php5 libapache2-mod-php5 curl php5-curl php5-gd php5-mcrypt php5-mysql php5-xmlrpc php5-common php5-dev php5-cli php5-xdebug php5-intl git samba postgresql postgresql-contrib nodejs npm unzip
+      echo "install packages" | tee -a ~/vagrantlog
+    fi
 
-    sudo apt-get update
-    sudo apt-get -y install php5 libapache2-mod-php5
-    # Install ruby compass sass
-    sudo apt-get install -y ruby-full
-    sudo gem install sass compass
-    # Install notify-osd
-    sudo apt-get install -y notify-osd
-    # Install and configurate ther PHP related packages.
-    sudo apt-get -y install curl php5-curl php5-gd php5-mcrypt php5-mysql php5-xmlrpc php5-common php5-dev php5-cli php5-xdebug php5-intl
     # Configurate xdebug.
     if ! grep -Fxq "[xdebug]" /etc/php5/apache2/php.ini ; then
       echo '[xdebug]' >> /etc/php5/apache2/php.ini
@@ -131,11 +129,7 @@ Vagrant.configure(2) do |config|
       echo 'xdebug.remote_host="'$(route -n | grep 'UG' | grep -v 'UGH' | cut -f 10 -d ' ')'"' >> /etc/php5/apache2/php.ini
       echo 'xdebug.max_nesting_level = 256' >> /etc/php5/apache2/php.ini
     fi
-    # Configuration timezone.
-    if ! grep -lirq "Australia/Melbourne" /etc/php5/apache2/php.ini; then
-      echo "Configure timezone"
-      sudo sed -i 's#;date.timezone =#date.timezone = Australia/Melbourne#g' /etc/php5/apache2/php.ini
-    fi
+
     # Add user vagrant to www-data group.
     if ! id -nG "vagrant" | grep -qw "www-data"; then
       echo "Configure user group"
