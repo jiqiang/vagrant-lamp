@@ -70,23 +70,36 @@ Vagrant.configure(2) do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
 
+    echo "================================"
+    echo "1. create vagrant log file"
+    echo "2. prepare repositories"
+    echo "3. install and configure apache"
+    echo "4. install and configure mysql"
+    echo "5. install packages"
+    echo "6. install and configure xdebug"
+    echo "7. configure user group"
+    echo "8. configure fixpers"
+    echo "================================"
+    echo ""
+    echo ""
+
     if [ ! -f ~/vagrantlog ]; then
-      echo "==========Create vagrant log file=========="
+      echo ">>>>> create vagrant log file"
       touch ~/vagrantlog
     fi
 
     if ! grep -Fxq "prepare" ~/vagrantlog ; then
-      echo "==========Prepare=========="
+      echo ">>>>> prepare repositories"
       sudo apt-get update
-      sudo apt-get install -y python-software-properties build-essential
+      sudo apt-get install -qq -o=Dpkg::Use-Pty=0 -y python-software-properties build-essential
       sudo add-apt-repository -y ppa:ondrej/php5-5.6
       sudo apt-get update
       echo "prepare" | tee -a ~/vagrantlog
     fi
 
     if ! grep -Fxq "apache" ~/vagrantlog ; then
-      echo "==========Install and Configure Apache"
-      sudo apt-get install -y apache2
+      echo ">>>>> install and configure apache"
+      sudo apt-get install -qq -o=Dpkg::Use-Pty=0 -y apache2
       sudo sed -i 's#;date.timezone =#date.timezone = Australia/Melbourne#g' /etc/php5/apache2/php.ini
       echo "ServerName vagrant-lamp" | sudo tee -a /etc/apache2/apache2.conf
       sudo a2enmod -q rewrite ssl
@@ -98,10 +111,10 @@ Vagrant.configure(2) do |config|
     fi
 
     if ! grep -Fxq "mysql" ~/vagrantlog ; then
-      echo "==========Install and Configure mysql=========="
+      echo ">>>>> install and configure mysql"
       sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password p@$$w03d'
       sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password p@$$w03d'
-      sudo apt-get -y install mysql-server
+      sudo apt-get -qq -o=Dpkg::Use-Pty=0 -y install mysql-server
       mysql -u root -pp@$$w03d -e "grant all privileges on *.* to 'root'@'%' identified by 'p@$$w03d' with grant option;flush privileges;"
       sudo sed -i 's/bind-address/#bind-address/g' /etc/mysql/my.cnf
       sudo sed -i 's/key_buffer/key_buffer_size/g' /etc/mysql/my.cnf
@@ -110,15 +123,15 @@ Vagrant.configure(2) do |config|
     fi
 
     if ! grep -Fxq "install packages" ~/vagrantlog ; then
-      echo "==========Install packages=========="
-      sudo apt-get install -y php5 libapache2-mod-php5 curl php5-curl php5-gd php5-mcrypt php5-mysql php5-xmlrpc php5-common php5-dev php5-cli php5-intl git samba postgresql postgresql-contrib nodejs npm unzip
+      echo ">>>>> install packages"
+      sudo apt-get install -qq -o=Dpkg::Use-Pty=0 -y php5 libapache2-mod-php5 curl php5-curl php5-gd php5-mcrypt php5-mysql php5-xmlrpc php5-common php5-dev php5-cli php5-intl git samba postgresql postgresql-contrib nodejs npm unzip
       echo "install packages" | tee -a ~/vagrantlog
     fi
 
     # Configurate xdebug.
     if ! grep -Fxq "xdebug" ~/vagrantlog ; then
-      echo "==========Install and Configure xdebug=========="
-      sudo apt-get install -y php5-xdebug
+      echo ">>>>> install and configure xdebug"
+      sudo apt-get install -qq -o=Dpkg::Use-Pty=0 -y php5-xdebug
       echo '[xdebug]' >> /etc/php5/apache2/php.ini
       echo 'zend_extension="'$(find / -name 'xdebug.so' 2> /dev/null)'"' >> /etc/php5/apache2/php.ini
       echo 'xdebug.default_enable = 1' >> /etc/php5/apache2/php.ini
@@ -135,12 +148,12 @@ Vagrant.configure(2) do |config|
     fi
 
     if ! id -nG "vagrant" | grep -qw "www-data"; then
-      echo "==========Configure user group=========="
+      echo ">>>>> configure user group"
       sudo usermod -a -G www-data vagrant
     fi
 
     if [ ! -f /usr/local/bin/fixperms ]; then
-      echo "==========Configure fixperms=========="
+      echo ">>>>> configure fixperms"
       sudo cp /vagrant/fixperms.sh /usr/local/bin/fixperms
       sudo chown vagrant:vagrant /usr/local/bin/fixperms
       sudo chmod 744 /usr/local/bin/fixperms
