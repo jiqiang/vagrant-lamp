@@ -116,6 +116,12 @@ Vagrant.configure(2) do |config|
       sudo chown vagrant:vagrant /usr/local/bin/fixperms
       sudo chmod 744 /usr/local/bin/fixperms
 
+      wget http://files.drush.org/drush.phar
+      php drush.phar core-status
+      chmod +x drush.phar
+      sudo mv drush.phar /usr/local/bin/drush
+      drush init
+
       touch /home/vagrant/.PROVISIONED
     fi
 
