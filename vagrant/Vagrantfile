@@ -94,7 +94,7 @@ Vagrant.configure(2) do |config|
       sudo sed -i 's/key_buffer/key_buffer_size/g' /etc/mysql/my.cnf
       sudo service mysql restart
 
-      sudo apt-get install -y php5 libapache2-mod-php5 curl php5-curl php5-gd php5-mcrypt php5-mysql php5-xmlrpc php5-common php5-dev php5-cli php5-intl git samba postgresql postgresql-contrib nodejs npm unzip
+      sudo apt-get install -y php5 libapache2-mod-php5 curl php5-curl php5-gd php5-mcrypt php5-mysql php5-xmlrpc php5-common php5-dev php5-cli php5-intl git samba php5-pgsql postgresql postgresql-contrib nodejs npm unzip
 
       sudo apt-get install -y php5-xdebug
       echo '[xdebug]' >> /etc/php5/apache2/php.ini
